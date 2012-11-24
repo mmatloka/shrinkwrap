@@ -59,6 +59,7 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.formatter.Formatter;
 import org.jboss.shrinkwrap.impl.base.ArchiveBase;
 import org.jboss.shrinkwrap.impl.base.AssignableBase;
+import org.jboss.shrinkwrap.impl.base.DependentClassExtractor;
 import org.jboss.shrinkwrap.impl.base.URLPackageScanner;
 import org.jboss.shrinkwrap.impl.base.Validate;
 import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
@@ -1258,6 +1259,38 @@ public abstract class ContainerBase<T extends Archive<T>> extends AssignableBase
         Validate.notNull(clazz, "Clazz must be specified");
 
         return addClasses(clazz);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.api.container.ClassContainer#addClass(boolean, java.lang.Class)
+     */
+    @Override
+    public T addClass(boolean recursive, Class<?> clazz) throws IllegalArgumentException {
+        return addClass(recursive, DependentClassExtractor.DEFAULT_DEPTH, clazz);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.jboss.declarchive.api.container.ClassContainer#addClass(boolean, int, java.lang.Class)
+     */
+    @Override
+    public T addClass(boolean recursive, int depth, Class<?> clazz) throws IllegalArgumentException {
+        Validate.notNull(clazz, "Clazz must be specified");
+
+        if (!recursive) {
+            return addClasses(clazz);
+        } else {
+            try {
+                final Collection<Class<?>> classes = new DependentClassExtractor().getUsedClasses(clazz.getName(), depth);
+
+                return addClasses(classes.toArray(new Class[classes.size()]));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Dependent class extraction unsuccessful", e);
+            }
+        }
     }
 
     /**

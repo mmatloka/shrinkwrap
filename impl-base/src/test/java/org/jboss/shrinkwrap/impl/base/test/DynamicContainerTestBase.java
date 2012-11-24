@@ -61,6 +61,10 @@ import org.jboss.shrinkwrap.impl.base.asset.AssetUtil;
 import org.jboss.shrinkwrap.impl.base.path.BasicPath;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassA;
 import org.jboss.shrinkwrap.impl.base.spec.donotchange.DummyClassParent;
+import org.jboss.shrinkwrap.impl.base.spec.donotchange2.DummyDependentClassA;
+import org.jboss.shrinkwrap.impl.base.spec.donotchange2.DummyDependentClassB;
+import org.jboss.shrinkwrap.impl.base.spec.donotchange2.DummyDependentClassC;
+import org.jboss.shrinkwrap.impl.base.spec.donotchange2.DummyDependentClassD;
 import org.jboss.shrinkwrap.impl.base.test.dummy.DummyClassForTest;
 import org.jboss.shrinkwrap.impl.base.test.dummy.DummyInterfaceForTest;
 import org.jboss.shrinkwrap.impl.base.test.dummy.nested1.EmptyClassForFiltersTest1;
@@ -793,6 +797,166 @@ public abstract class DynamicContainerTestBase<T extends Archive<T>> extends Arc
         this.ensureClassesAdded();
     }
 
+    /**
+     * Ensure classes on proper depth are added to the archive.
+     * @throws Exception
+     */
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testAddClassNotRecursive() throws Exception {
+        getClassContainer().addClass(false, DummyDependentClassA.class);
+
+        ArchivePath expectedPath = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassA.class));
+
+        assertContainsClass(expectedPath);
+
+        ArchivePath expectedPath2 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassB.class));
+
+        assertNotContainsClass(expectedPath2);
+
+        ArchivePath expectedPath3 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassC.class));
+
+        assertNotContainsClass(expectedPath3);
+
+        ArchivePath expectedPath4 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassD.class));
+
+        assertNotContainsClass(expectedPath4);
+    }
+
+    /**
+     * Ensure classes on proper depth are added to the archive.
+     * @throws Exception
+     */
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testAddClassRecursive() throws Exception {
+        getClassContainer().addClass(true, DummyDependentClassA.class);
+
+        ArchivePath expectedPath = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassA.class));
+
+        assertContainsClass(expectedPath);
+
+        ArchivePath expectedPath2 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassB.class));
+
+        assertContainsClass(expectedPath2);
+
+        ArchivePath expectedPath3 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassC.class));
+
+        assertNotContainsClass(expectedPath3);
+
+        ArchivePath expectedPath4 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassD.class));
+
+        assertNotContainsClass(expectedPath4);
+    }
+
+    /**
+     * Ensure classes on proper depth are added to the archive.
+     * @throws Exception
+     */
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testAddClassRecursiveDepth1() throws Exception {
+        getClassContainer().addClass(true, 1, DummyDependentClassA.class);
+
+        ArchivePath expectedPath = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassA.class));
+
+        assertContainsClass(expectedPath);
+
+        ArchivePath expectedPath2 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassB.class));
+
+        assertContainsClass(expectedPath2);
+
+        ArchivePath expectedPath3 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassC.class));
+
+        assertNotContainsClass(expectedPath3);
+
+        ArchivePath expectedPath4 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassD.class));
+
+        assertNotContainsClass(expectedPath4);
+    }
+
+    /**
+     * Ensure classes on proper depth are added to the archive.
+     * @throws Exception
+     */
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testAddClassRecursiveDepth2() throws Exception {
+        getClassContainer().addClass(true, 2, DummyDependentClassA.class);
+
+        ArchivePath expectedPath = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassA.class));
+
+        assertContainsClass(expectedPath);
+
+        ArchivePath expectedPath2 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassB.class));
+
+        assertContainsClass(expectedPath2);
+
+        ArchivePath expectedPath3 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassC.class));
+
+        assertContainsClass(expectedPath3);
+
+        ArchivePath expectedPath4 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassD.class));
+
+        assertNotContainsClass(expectedPath4);
+    }
+
+    /**
+     * Ensure classes on proper depth are added to the archive.
+     * @throws Exception
+     */
+    @Test
+    @ArchiveType(ClassContainer.class)
+    public void testAddClassRecursiveDepth4() throws Exception {
+        getClassContainer().addClass(true, 4, DummyDependentClassA.class);
+
+        ArchivePath expectedPath = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassA.class));
+
+        assertContainsClass(expectedPath);
+
+        ArchivePath expectedPath2 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassB.class));
+
+        assertContainsClass(expectedPath2);
+
+        ArchivePath expectedPath3 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassC.class));
+
+        assertContainsClass(expectedPath3);
+
+        ArchivePath expectedPath4 = new BasicPath(getClassPath(),
+                AssetUtil.getFullPathForClassResource(DummyDependentClassD.class));
+
+        assertContainsClass(expectedPath4);
+    }
+
+    /**
+     * Ensure exception will be thrown,
+     * @throws Exception
+     */
+    @Test(expected =  IllegalArgumentException.class)
+    @ArchiveType(ClassContainer.class)
+    public void testAddClassRecursiveOnZeroDepth() throws Exception {
+        getClassContainer().addClass(true, 0, DummyDependentClassA.class);
+    }
+    
     /**
      * Ensure classes can be added to containers
      *

@@ -37,12 +37,42 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     /**
      * Adds the {@link Class}, and all member (inner) {@link Class}es to the {@link Archive}.
      *
-     * @param class The class to add to the Archive
+     * @param clazz The class to add to the Archive
      * @return This archive
      * @throws IllegalArgumentException
      *             If no class were specified
      */
     T addClass(Class<?> clazz) throws IllegalArgumentException;
+
+    /**
+     * Adds the {@link Class}, all member (inner) {@link Class}es and all used by it {@link Class}es to the
+     * {@link Archive}.
+     *
+     * @param recursive
+     *            should dependent classes be added
+     * @param clazz
+     *            The class to add to the Archive
+     * @return This archive
+     * @throws IllegalArgumentException
+     *             If no class were specified
+     */
+    T addClass(boolean recursive, Class<?> clazz) throws IllegalArgumentException;
+
+    /**
+     * Adds the {@link Class}, all member (inner) {@link Class}es and all used by it {@link Class}es to the
+     * {@link Archive}.
+     *
+     * @param recursive
+     *            should dependent classes be added
+     * @param depth
+     *            classes will be retrieved on given depth
+     * @param clazz
+     *            The class to add to the Archive
+     * @return This archive
+     * @throws IllegalArgumentException
+     *             If no class were specified
+     */
+    T addClass(boolean recursive, int depth, Class<?> clazz) throws IllegalArgumentException;
 
     /**
      * Adds the {@link Class}, and all member (inner) {@link Class}es, with the specified fully-qualified name, loaded
@@ -190,7 +220,7 @@ public interface ClassContainer<T extends Archive<T>> extends ResourceContainer<
     /**
      * Deletes the {@link Class}, and all member (inner) {@link Class}es from the {@link Archive}.
      *
-     * @param class The class to be deleted from the Archive
+     * @param clazz The class to be deleted from the Archive
      * @return This archive
      * @throws IllegalArgumentException If no class was specified
      */
